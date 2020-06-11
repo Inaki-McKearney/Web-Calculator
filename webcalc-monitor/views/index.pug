@@ -1,0 +1,79 @@
+extends layout
+
+block layout-content
+  div.View
+    h1.Banner API Monitor
+    div.Message
+      div.Title
+        section
+        h3 Response times since instantiation:
+      table
+        tr
+          th Operator
+          th Responses
+          th Average (ms)
+          th Max (ms)
+          th Min (ms)
+          th Status
+          th Correctness
+        tr
+          td Add
+          td #{stats.add.numberResponses}
+          td #{stats.add.average.toFixed(2)}
+          td #{stats.add.max}
+          td #{stats.add.min}
+          td #{stats.add.status}
+          td #{Math.round((stats.add.correct/stats.add.numberResponses)*100)}%  
+        tr
+          td Modulo
+          td #{stats.modulo.numberResponses}
+          td #{stats.modulo.average.toFixed(2)}
+          td #{stats.modulo.max}
+          td #{stats.modulo.min}
+          td #{stats.modulo.status}
+          td #{Math.round((stats.modulo.correct/stats.modulo.numberResponses)*100)}%  
+        tr
+          td Multiply
+          td #{stats.multiply.numberResponses}
+          td #{stats.multiply.average.toFixed(2)}
+          td #{stats.multiply.max}
+          td #{stats.multiply.min}
+          td #{stats.multiply.status}
+          td #{Math.round((stats.multiply.correct/stats.multiply.numberResponses)*100)}%  
+        tr
+          td Power
+          td #{stats.power.numberResponses}
+          td #{stats.power.average.toFixed(2)}
+          td #{stats.power.max}
+          td #{stats.power.min}
+          td #{stats.power.status}
+          td #{Math.round((stats.power.correct/stats.power.numberResponses)*100)}%  
+        tr
+          td Quotient
+          td #{stats.quotient.numberResponses}
+          td #{stats.quotient.average.toFixed(2)}
+          td #{stats.quotient.max}
+          td #{stats.quotient.min}
+          td #{stats.quotient.status}
+          td #{Math.round((stats.quotient.correct/stats.quotient.numberResponses)*100)}%  
+        tr
+          td Subtract
+          td #{stats.subtract.numberResponses}
+          td #{stats.subtract.average.toFixed(2)}
+          td #{stats.subtract.max}
+          td #{stats.subtract.min}
+          td #{stats.subtract.status}
+          td #{Math.round((stats.subtract.correct/stats.subtract.numberResponses)*100)}%  
+    div.Chart
+      table.columns
+        section
+          h4.SubTitle     Average Response Times
+        tr.columns
+          td
+            #piechart_div
+          td
+            #barchart_div
+
+    div.NavButtons
+      a(href="/")
+          div.NavButton Refresh!

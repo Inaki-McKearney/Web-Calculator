@@ -1,0 +1,55 @@
+version: "3"
+services:
+  frontend:
+    build: ./webcalc-frontend
+    ports: 
+      - "9001:80"
+    environment:
+      - proxy=http://proxy/
+
+  proxy:
+    build: ./webcalc-proxy
+    ports: 
+      - "9002:80"
+  
+  monitor:
+    build: ./webcalc-monitor
+    ports: 
+      - "9003:80"
+    depends_on:
+      - add
+      - multiply
+      - modulo
+      - power
+      - quotient
+      - subtract
+
+  add:
+    build: ./webcalc-add
+    ports: 
+      - "80"
+
+  multiply:
+    build: ./webcalc-multiply
+    ports: 
+      - "80"
+
+  modulo:
+    build: ./webcalc-modulo
+    ports: 
+      - "80"
+
+  power:
+    build: ./webcalc-power
+    ports: 
+      - "80"
+      
+  quotient:
+    build: ./webcalc-quotient
+    ports: 
+      - "80"
+ 
+  subtract:
+    build: ./webcalc-subtract
+    ports: 
+      - "80"

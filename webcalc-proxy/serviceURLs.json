@@ -1,0 +1,10 @@
+{
+	"PROXY_PORT": ":80",
+	"FRONTEND":   "http://frontend",
+	"ADD":        "http://add",
+	"SUBTRACT":   "http://subtract",
+	"MULTIPLY":   "http://multiply",
+	"QUOTIENT":   "http://quotient",
+	"MODULO":     "http://modulo",
+	"POWER":      "http://power"
+}

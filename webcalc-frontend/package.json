@@ -1,0 +1,14 @@
+{
+  "name": "webcalc_frontend",
+  "version": "1.0.0",
+  "description": "Webcalc Frontend Service",
+  "author": "Inaki McKearney",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "handlebars": "^4.5.3"
+  }
+}

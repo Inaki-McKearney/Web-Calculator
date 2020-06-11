@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WebCalc</title>
+
+<script type="text/javascript">
+
+let value = 0;
+let x = 0;
+let y = 0;
+
+let buttonsLocked = false; //Used to block buttons while waiting on asynchronous function calls
+
+let operator = '';
+let operations = {
+  "+": "add",
+  "-": "subtract",
+  "*": "multiply",
+  "/": "quotient",
+  "%": "modulo",
+  "^": "power"
+};
+
+let proxyURL = {{proxy}}
+
+function Display()
+{
+    document.getElementById('display').value = value;
+}
+
+function Clear()
+{
+    //Exit Clear function if waiting on asynchronous function call responses
+    if (buttonsLocked)
+        return;
+    value = 0;
+    x = 0;
+    y = 0;
+    operator = '';
+    Display();
+}
+
+function NumClick(n)
+{
+    //Exit NumClick function if waiting on asynchronous function call responses
+    if (buttonsLocked)
+        return;
+
+    if (value == 0)
+        value = n;
+    else
+    {
+        value *= 10;
+        value += n;
+    }
+
+    Display();
+}
+
+//Determines the selected operator and the appropriate operator function
+function Op(z)
+{
+    //Exit Op function if waiting on asynchronous function call responses
+    if (buttonsLocked)
+        return;
+
+    //if we have an outstanding operation resolve it
+    if (operator != '')
+        Equals();
+
+    //Ensure previous error message is not passed as "x"
+    if (!isNaN(value))
+        x = value;
+    value = 0;
+    operator = z;
+
+    Display();
+}
+
+function Equals()
+{
+    if (operator == '')
+        return;
+
+    y = value;
+
+    if (operator in operations)
+    {
+        //let ans = x+y; // nah - too easy :)
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4){
+                buttonsLocked = false; //Unlock buttons as asynchronous functions have been called
+                var j = JSON.parse(this.response);
+                x=0;
+                y=0;
+                operator='';
+
+                if (this.status == 200)
+                    value = j.answer;
+                else if (this.status == 400)
+                    value = j.message;
+                else if (this.status == 404)
+                    value = "Operator does not exist";
+                else
+                    value = "ERR";
+                Display()
+            }
+        };
+
+        xhttp.open("GET",proxyURL+operations[operator]+"?x="+x+"&y="+y);
+        buttonsLocked = true; //Lock buttons as asynchronous functions have returned
+        xhttp.send();
+
+        return;
+    }
+}
+
+</script>
+
+<style type="text/css">
+body  {
+    font-size: 150%;
+    font-family: monospace;
+}
+
+#logo
+{
+    font-family: Calibri, sans-serif;
+    font-weight: lighter;
+    color: #505050;
+    margin: 0.5em;
+}
+
+#calculator
+{
+    text-align: center;
+    margin-top: 1em;
+}
+
+#display {
+    font-size: 100%;
+    padding: 0.2em;
+    margin: 0.2em;
+    font-family: monospace;
+    letter-spacing: 0.1em;
+}
+
+.calc1 {
+    border: solid #d0d0d0 1px;
+    background-color: #f0f0f0;
+    padding: 1.5em;
+    margin: 1em;
+}
+</style>
+
+</head>
+<body>
+<div id="calculator">
+    <div id="logo">
+        Casidave Calcutron
+    </div>
+    <div>
+        <input type="text" id="display" readonly="1" value="">
+    </div>
+    <div>
+        <button class="calc1" onclick="Clear();">C</button>
+        <button class="calc1" onclick="">?</button>
+        <button class="calc1" onclick="Op('^')" title="Power">^</button>
+        <button class="calc1" onclick="Op('*')" title="Multiply">*</button>
+    </div>
+    <div>
+        <button class="calc1" onclick="NumClick(7);">7</button>
+        <button class="calc1" onclick="NumClick(8);">8</button>
+        <button class="calc1" onclick="NumClick(9);">9</button>
+        <button class="calc1" onclick="Op('+');">+</button>
+    </div>
+    <div>
+        <button class="calc1" onclick="NumClick(4);">4</button>
+        <button class="calc1" onclick="NumClick(5);">5</button>
+        <button class="calc1" onclick="NumClick(6);">6</button>
+        <button class="calc1" onclick="Op('-');">-</button>
+    </div>
+    <div>
+        <button class="calc1" onclick="NumClick(1);">1</button>
+        <button class="calc1" onclick="NumClick(2);">2</button>
+        <button class="calc1" onclick="NumClick(3);">3</button>
+        <button class="calc1" onclick="Equals();">=</button>
+    </div>
+    <div>
+        <button class="calc1" onclick="NumClick(0);">0</button>
+        <button class="calc1" onclick="">?</button>
+        <button class="calc1" onclick="Op('/')" title="Quotient">/</button>
+        <button class="calc1" onclick="Op('%')" title="Modulo">%</button>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+    value = 1234;
+    Display();
+</script>
+
+</html>

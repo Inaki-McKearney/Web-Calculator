@@ -1,0 +1,6 @@
+Default:
+  image: golang:1.13.4-buster
+
+  script:
+    - go mod download
+    - go test
